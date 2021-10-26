@@ -32,18 +32,15 @@ int main(void)
 		//Dados Brutos || tamanho - número max de pessoas || [150] - tamanho max da string
 		char clientes_linha[tamanho][150];
 
-
 		//Volta o vetor para o início do arquivo
 		fseek(dados_brutos, 3, SEEK_SET);
-
-		printf("\n");
 
 		//Loop para organizar as linhas em um array:
 		// clientes_linha[index do cliente][posição do vetor na string]
 		n = 0; pos = 0;
 		while ((c=fgetc(dados_brutos)) != EOF) {
 			
-			printf("%c", c);
+			// printf("%c", c);
 			clientes_linha[n][pos] = c;
 			pos++;
 
@@ -61,7 +58,6 @@ int main(void)
 		fclose(dados_brutos);
 		printf("\n");
 
-
 		//Dados organizados || n - index pessoa | [4] - número de tipos (ID, NOME, SOBRENOME, SALDO) | [100] tamanho max string	
 		char dados_org[n][4][100];
 
@@ -72,32 +68,53 @@ int main(void)
 		int i, tipo, i2;
 		for (n = 0; n < tamanho; n++){
 			tipo = 0; i2 = 0;
-			printf("CLIENTE [%d] | ", n);
+			printf("CLIENTE [%d] || ", n);
 			for (i = 0; clientes_linha[n][i] != '\0'; i++) {
 				
 				printf("%c", clientes_linha[n][i]);
 				
 				// Quando eu tiro esses comentários o programa dá um erro no qual ou
-				// printa tudo errado ou dá um segmentation fault
+				// printa tudo errado ou dá um segmentation fault ||CORRIGIDO||
 
+				// Nesse ponto ele separa as informações contidas por linha
+				//  e coloca elas no array dados_org
 				if (clientes_linha[n][i] != ' ') {
 					dados_org[n][tipo][i2] = clientes_linha[n][i];
 					i2++;
+
 				} else {
+					//Formatação para printar e eu saber se ele está
+					// separando corretamente
+					printf("| ");
+
+					//Transforma o caracter ' ' em um \0 para determinar o 
+					// fim da string, retorna o index2 para 0 e incrementa o
+					// tipo.
 					dados_org[n][tipo][i2] = '\0';
 					tipo++;
 					i2 = 0;
 				}
 
+				//Formatação para eu saber quando ele chegou no final da linha
 				if (clientes_linha[n][i+1] == '\0')
 					printf("\n-------------------------------------------\n");	
 			}
 		}
-		printf("\n");
 
-		n = 9; tipo = 1;
-		printf("%s\n", clientes_linha[n]);
-		printf("dados_org[%d][%d] - %s\n", n, tipo, dados_org[n][tipo]);
+		//Testes para ver se está tudo no lugar
+		printf("\nIndex CLiente -> ");
+		scanf("%d", &n);
+		
+		printf("\n0 - ID\n1 - NOME\n2 - SOBRENOME\n3 - SALDO\n\nTipo do Dado-> ");
+		scanf("%d", &tipo);
+
+		printf("\n-------------------------------------------\n");
+
+		printf("Informação completa da Linha -> %s\n", clientes_linha[n]);
+		printf("Dado posição dados_org[%d][%d] -> %s\n", n, tipo, dados_org[n][tipo]);
+
+		printf("-------------------------------------------\n");
+		//FIM testes
 	}
 	return 0;
 }
