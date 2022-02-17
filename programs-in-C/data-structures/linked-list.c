@@ -64,7 +64,7 @@ int main(void)
 			Mostra as opções de escolha de inserção para o usuário
 			*/
 
-			printf("\n1 - Inserir no Começo\n2 - Inserir no Final\n3 - Excluir um número\n4 - Printar\n-1 - Sair do Prog.\n\n--> ");
+			printf("\n1 - Inserir no Começo\n2 - Inserir no Final\n3 - Remover um número\n4 - Printar\n-1 - Sair do Prog.\n\n--> ");
 			scanf("%d", &selecao);
 
 			/*
@@ -91,7 +91,7 @@ int main(void)
 			Exclui o primeiro número igual ao solicitado da esquerda para direita
 			*/
 			} else if (selecao == 3) {
-				printf("Excluir--> ");
+				printf("Remover--> ");
 				scanf(" %d", &inteiro);
 
 				excluiNum(alista, inteiro);
