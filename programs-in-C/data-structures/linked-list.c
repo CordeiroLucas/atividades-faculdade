@@ -87,7 +87,7 @@ int main(void)
 
 
 			/*
-			Exclui o primeiro número igual ao solicitado
+			Exclui o primeiro número igual ao solicitado da esquerda para direita
 			*/
 			} else if (selecao == 3) {
 				printf("Excluir--> ");
@@ -99,7 +99,6 @@ int main(void)
 			Chama função para printa a lista de forma da esquerda para direita
 			*/
 			} else if (selecao == 4) {
-
 				printList (alista);
 			} else 
 				break;	
@@ -188,7 +187,7 @@ void excluiNum (lista *alista, int dado)
 
 		printf("Número não encontrado !\n");
 		return;	
-		
+
 	} else {
 		printf("Lista Vazia !\n");
 		return;
