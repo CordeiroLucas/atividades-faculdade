@@ -26,7 +26,7 @@ int main(void)
 	struct dados *pessoa1;
 	pessoa1 = (struct dados*) malloc(sizeof(struct dados));
 
-	strcpy(pessoa1->nome, "lucas") ;
+	strcpy(pessoa1->nome, "lucas");
 	pessoa1->idade = 19;
 	pessoa1->altura = 1.73;
 
