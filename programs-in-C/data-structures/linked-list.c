@@ -101,8 +101,11 @@ int main(void)
 			*/
 			} else if (selecao == 4) {
 				printList (alista);
-			}	
-		} 
+				
+			} else if (selecao == -1) 
+				break;
+		} else 
+			break;
 	}
 }
 
