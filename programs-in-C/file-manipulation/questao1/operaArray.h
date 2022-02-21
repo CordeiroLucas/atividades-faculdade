@@ -1,4 +1,3 @@
-
 /*Retorna um array de int | Inverso do array do usuário*/
 void newReverse (int tamanho, int array[tamanho], FILE *arquivo)
 {
