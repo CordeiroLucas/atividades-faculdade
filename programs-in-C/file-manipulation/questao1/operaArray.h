@@ -61,7 +61,6 @@ void unique (int tamanho, int array[tamanho], FILE *arquivo)
 {
 	int i = 0, m, n, aparicoes, numero;
 	int arrayUn[tamanho];
-
 	printf("\n-Unique-\n");
 
 	for (m = 0; m < tamanho; m++) {
