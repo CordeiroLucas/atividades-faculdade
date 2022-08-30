@@ -2,80 +2,81 @@
 #include <stdlib.h>
 #include <pthread.h>
 
-void *avg_func(void *);
-void *min_func(void *);
+void *avg_func(void *str);
+void *min_func(void *str);
 double avg;
 int min;
 
-typedef struct{ // Define uma struct para ter mais de uma informação em um único parâmetro
-	int size;
-	int * values;
+typedef struct{//Passa o tamanho e os valores do array!!!!
+    int size;
+    int * values;
 }datastruct;
 
-int main(int argc, char *argv[]) //argv é igual aos parâmetros do programa a ser executado
-{
-	if (argc == 1) //Se igual a 1, significa que ele tem apenas o nome do programa a ser executado
-	{ 
-		printf("No arguments entered\n");
-		exit(0);
-	}
+int main(int argc, char *argv[]){
+    //Argc é o count da linha de comando introduzida!!!!!
+    if (argc == 1){//Se argc == 1 significa que apenas foi introduzido o nome do programa!
+        printf("No arguments entered\n");
+        exit(0);
+    }
 
-	int copy[argc - 1]; //Cria um array com tamanho igual ao do parâmetro, sendo que o primeiro valor é o nome do programa, então ele é
-			    // excluído.
-	for (int i = 0; i <= argc - 1; i++)
-		copy[i] = atoi(argv[i+1]);
+    int copy[argc -1];//Declara o tamanho do array copia como argc-1(para retirar o nome do programa)
+    for (int i=0; i < argc - 1; i++){//Esse loop vai pegar os inteiros do array
+        copy[i] =  atoi(argv[i+1]);//+1 pq ele exclui o primeiro elemento que é o nome do programa
+    }
 
-	datastruct ds = {argc - 1, copy};
+    datastruct ds =  {argc -1, copy};
 
-	pthread_t thread1, thread2; // Cria uma thread do tipo pthread (tipo com todos os dados e características de uma thread )
-	int t1, t2;
+    pthread_t thread1,thread2; //Declara thread1 do tipo pthread_t
 
-	t1 = pthread_create(&thread1,NULL,(void *) avg_func, (void *) &ds);
-	if (t1)
-	{
-		fprintf(stderr, "Erro created thread 1 with code %d\n", t1); //Se houver algum erro na criação da thread, ele irá escrever o 
-		// erro no lugar padrão definido pelo stderr (se não for definido ele printa no terminal).
-		exit(EXIT_FAILURE);
-	}
+    int t1,t2;
 
-	t2 = pthread_create(&thread2,NULL,(void *) min_func, (void *) &ds);
-	if (t2)
-	{
-		fprintf(stderr, "Erro created thread 2 with code %d\n", t2); //Se houver algum erro na criação da thread, ele irá escrever o 
-		// erro no lugar padrão definido pelo stderr (se não for definido ele printa no terminal).
-		exit(EXIT_FAILURE);
-	}
+    t1 = pthread_create(&thread1,NULL,(void *)avg_func,(void *) &ds);//Cria uma thread! O t1 é uma flag q salva o retorno 0 = sucesso  
 
-	pthread_join(thread1, NULL);
-	pthread_join(thread2, NULL);
-	printf("The average: %g\n", avg);
-	printf("The min: %d\n", min);
+    if(t1){
+        fprintf(stderr, "Erro created thread 1 with code %d\n",t1);//FPRINTF salva o erro no config.log boas praticas ;)
+        exit(EXIT_FAILURE); 
+    }
 
-	exit(EXIT_SUCCESS);
+    t2 = pthread_create(&thread2,NULL,(void *)min_func, (void *) &ds);
+
+    if(t2){
+        fprintf(stderr, "Erro created thread 2 with code %d\n",t2);//FPRINTF salva o erro no config.log boas praticas ;)
+        exit(EXIT_FAILURE); 
+    }
+
+    pthread_join(thread1,NULL);
+    pthread_join(thread2,NULL);
+
+    printf("The average: %g\n", avg);
+    printf("The min: %d\n", min);
+
+    exit(EXIT_SUCCESS);
 }
 
-void *avg_func(void *str)
-{
-	datastruct *ds;
-	ds = (datastruct *) str; //definindo uma variável que é um ponteiro para o tipo datastruct
+void *avg_func(void *str){
+    datastruct *ds;
+    ds = (datastruct *) str;
 
-	avg = 0;
+    avg = 0;
 
-	int sz = ds->size;
-	for(int i = 0; i < sz; i++)
-		avg += ds->values[i];
-	
-	avg = avg/sz;
+    int sz = ds->size;
+    for(int i=0; i<sz;i++){
+        avg += ds->values[i];
+    }
+    avg = avg/sz;
 }
 
 void *min_func(void *str)
 {
-	datastruct *ds;
-	ds = (datastruct *) str;
+    datastruct *ds;
+    ds = (datastruct *) str;
 
-	min = ds->values[0];
-	int sz = ds->size;
-
-	for(int i = 1; i < sz; i++)
-		if (min > ds->values[i]) min = ds->values[i];
+    int sz = ds->size;
+    min = ds->values[0];
+    
+    for(int i=1; i<sz;i++){
+        if(min > ds->values[i]){
+            min = ds->values[i];
+        }
+    }
 }
