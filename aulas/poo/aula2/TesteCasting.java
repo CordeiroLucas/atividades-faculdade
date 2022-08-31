@@ -1,7 +1,7 @@
 
 //Aprendendo sobre casting em java
 
-public class testeCasting {
+public class TesteCasting {
 	public static void main (String[] args) {
 		
 		long a = 2047; //64 bits
