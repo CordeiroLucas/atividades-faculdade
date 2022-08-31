@@ -6,13 +6,11 @@ public class Main {
 	public static void main (String[] args) {
 		Scanner scan = new Scanner(System.in);
 
-		Empregado pessoa1 = new Empregado();
+		Empregado pessoa1 = new Empregado(902000000012345L, "jorge perera", 20, 0, 3500);
 
-		pessoa1.sexo = 0; //masc
-		pessoa1.idade = 35;
-		pessoa1.sb = 3500;
-		pessoa1.nome = "jorgin pocas";
-		System.out.println(pessoa1.calcLiquido(100, 200));
+		System.out.println(pessoa1.matricula);
+
+		System.out.printf("Matricula: %d\n", pessoa1.matricula);
 
 		System.out.println("Bondia");
 
