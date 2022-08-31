@@ -1,1 +1,3 @@
-Programas da cadeira de Programação Orientada a Objetos
+# Programação Orientada a Objetos
+
+Programas desenvolvidos durante a cadeira
