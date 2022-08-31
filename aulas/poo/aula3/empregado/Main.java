@@ -8,15 +8,11 @@ public class Main {
 
 		Empregado pessoa1 = new Empregado();
 
-
-
-		pessoa1.sexo = 0;
+		pessoa1.sexo = 0; //masc
 		pessoa1.idade = 35;
 		pessoa1.sb = 3500;
 		pessoa1.nome = "jorgin pocas";
 		System.out.println(pessoa1.calcLiquido(100, 200));
-		
-
 
 		System.out.println("Bondia");
 
