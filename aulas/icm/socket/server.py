@@ -23,7 +23,6 @@ while True:
                         print(f"Client {address} disconnected!\n")
                         clientsocket.close()
                         print(f"Servidor foi finalizado pelo cliente {address}!\n")
-                        clientsocket.send(bytes("Fechando Servidor...", ))
                         serv.close()
                         exit(0)
                 else:
