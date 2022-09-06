@@ -1,7 +1,7 @@
 import socket
 
 serv = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-serv.bind(("26.135.226.163", 8080))
+serv.bind(("192.168.0.10", 8080))
 serv.listen((5))
 
 while True:
