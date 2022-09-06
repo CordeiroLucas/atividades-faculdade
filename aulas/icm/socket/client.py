@@ -9,7 +9,7 @@ while True:
 	if len(msg) <= 0:
 		break
 	full_msg += msg.decode("utf-8")
-	
+	client.send(bytes("Bom dia Server", "utf-8"))
 
 print(full_msg)
 
