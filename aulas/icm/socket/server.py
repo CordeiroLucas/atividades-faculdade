@@ -1,5 +1,4 @@
 import socket
-import threading
 
 serv = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 serv.bind(("192.168.0.10", 8080))
@@ -19,6 +18,12 @@ while True:
                         clientsocket.close()
                         print(f"Client {address} disconnected!\n")
                         break
+                elif full_msg == "shutdown":
+                        print(f"Client {address} disconnected!\n")
+                        clientsocket.close()
+                        print(f"Servidor {serv} foi finalizado pelo cliente {address}!\n")
+                        serv.close()
+                        exit(0)
                 else:
                         print(f"Package {i}: {full_msg}")
                         i+=1
@@ -26,6 +31,6 @@ while True:
 
         
         
-serv.close()
+
 
        
