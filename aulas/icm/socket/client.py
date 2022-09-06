@@ -11,6 +11,7 @@ while True:
 	if len(msg) <= 0:
 		break
 	full_msg += msg.decode("utf-8")
+ 
 	while True:
 		enviar = input()
 		client.send(bytes(enviar, "utf-8"))
