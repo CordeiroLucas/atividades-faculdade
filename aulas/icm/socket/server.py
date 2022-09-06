@@ -9,6 +9,7 @@ full_msg = ''
 while True:
         clientsocket, address = serv.accept()
         print(f"Connection from {address} has been established!")
+=======
         clientsocket.send(bytes("Welcome to the Server!", "utf-8"))
         
         while True:
@@ -20,6 +21,7 @@ while True:
                         print(f"Client {address} disconnected!\n")
                         break
                 else: print(full_msg)
+>>>>>>> 8a349f728215adda23b364cef4132b462ea7121b
         
         
 serv.close()
