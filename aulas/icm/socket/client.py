@@ -3,6 +3,7 @@ import socket
 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 client.connect(("192.168.0.10", 8080))
 
+
 full_msg = ''
 msg = client.recv(1024)
 print(msg.decode("utf-8"));
