@@ -3,6 +3,13 @@
   "configurations": [
     {
       "type": "java",
+      "name": "Launch encapsulamento",
+      "request": "launch",
+      "mainClass": "aulas.poo.aula4.encapsulamento.encapsulamento",
+      "projectName": "programs_e52afbe4"
+    },
+    {
+      "type": "java",
       "name": "Launch Main",
       "request": "launch",
       "mainClass": "empregado.Main",
