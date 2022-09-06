@@ -16,7 +16,7 @@ while True:
 		enviar = input()
 		client.send(bytes(enviar, "utf-8"))
 		if enviar == "quit":
-			break
+			exit(0)
 		elif enviar == "shutdown":
 			exit(0)
 
