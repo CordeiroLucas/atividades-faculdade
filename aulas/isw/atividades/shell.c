@@ -13,6 +13,8 @@ int main(void)
 	printf("est seq> ");
         fflush(stdout);
 
+	
+
 	/*
 	 After read the input, the next steps are:
 	    - create n child process with fork() command
