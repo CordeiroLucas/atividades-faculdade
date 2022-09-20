@@ -13,6 +13,9 @@ int main(void)
 	printf("lcp2 seq> ");
         fflush(stdout);
 
+	*args = getc(MAX_LINE);
+
+	
 	/*
 	 After read the input, the next steps are:
 	    - create n child process with fork() command
