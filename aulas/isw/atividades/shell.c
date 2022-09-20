@@ -10,7 +10,7 @@ int main(void)
 	
     while (should_run) {
 
-	printf("est seq> ");
+	printf("lcp2 seq> ");
         fflush(stdout);
 
 	/*
