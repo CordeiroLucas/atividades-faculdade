@@ -1,7 +1,7 @@
-CC = gcc
+$(CC) = gcc
 
-objects = shell.o
+shell: $(objects)
+	$(CC) shell.c -o shell
 
-output: $(objects)
-	$(CC) -o objects
-
+Clean:
+	rm shell

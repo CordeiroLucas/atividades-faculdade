@@ -28,5 +28,8 @@
     "**/.*/**",
     "**/.vscode",
     "**/.vscode/**"
-  ]
+  ],
+  "files.associations": {
+    "types.h": "c"
+  }
 }
