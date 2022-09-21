@@ -27,7 +27,14 @@ int main(void)
 
 		pid = fork();
 
+		if (pid < 0) {
+			fprintf(stderr, "Fork failed\n");
+			return 1;
+		} 
+		else if (pid == 0) {
 
+			
+		}
 
 		if (strcmp(args, "exit\n") == 0) exit(0);
 
