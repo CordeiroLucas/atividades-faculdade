@@ -49,30 +49,76 @@
 // 		return 0;
 // }
 
-void  parse(char *line, char **argv)
+void  execute(char **args);
+void  trata_linha0(char *line, char **args);
+
+{
+	
+
+	printf("1\n");
+
+
+	printf("2\n");
+
+	printf("\n");
+
+	fclose(arq);
+
+	return 0;
+}
+
+void  main(int argc, char file[25])
+{
+     char  line[MAX_LINE];             /* Linha de entrada                 */
+     char  *args[MAX_LINE/2 + 1];      /* argumentos      */
+     int x;
+	FILE *arq;
+
+     while(!feof(arq)){
+		fscanf(arq, "%d", &x);
+	}
+
+     arq = fopen(file, "r");
+
+     while (1) {                  /* repeat until done ....         */
+          printf("lcp2> ");     
+          gets(line);             
+          printf("\n");
+          trata_linha0(line, args);      /*   trata_linha0 the line               */
+          // printf("%s\n", *args);
+          if (strcmp(args[0], "exit") == 0)  /* is it an "exit"?     */
+               exit(0);            /*   exit if it is                */
+          else if (strcmp(args[0], "style") == 0 && strcmp(args[1], "sequential") == 0)
+               exit(0);
+
+          execute(args);           /* otherwise, execute the command */
+     }
+}
+
+void  trata_linha0(char *line, char **args)
 {
      while (*line != '\0') {       /* Se diferente do fim da linha */ 
           while (*line == ' ' || *line == '\t' || *line == '\n')
                *line++ = '\0';     /*  Substitui espaços em branco por NULL */
-          *argv++ = line;          /* Guarda a posição do argumento     */
+          *args++ = line;          /* Guarda a posição do argumento     */
           while (*line != '\0' && *line != ' ' && 
                  *line != '\t' && *line != '\n') 
                line++;             /* Pula o argumento até caracter de espaço, ou fim da linha    */
      }
-     *argv = '\0';                 /* Coloca o final do argumento  */
+     *args = '\0';                 /* Coloca o final do argumento  */
 }
 
-void  execute(char **argv)
+void  execute(char **args)
 {
      pid_t	pid;
      int	status;
 
-     if ((pid = fork()) < 0) {     /* Fa     z um fork para criar um processo filho          */
+     if ((pid = fork()) < 0) {     /* Faz um fork para criar um processo filho          */
           printf("Fork failed\n");
           exit(1);
      }
-     else if (pid == 0) {          /* for the child process:         */
-          if (execvp(*argv, argv) < 0) {     /* execute the command  */
+     else if (pid == 0) {          /* Processo filho         */
+          if (execvp(*args, args) < 0) {     /* execute the command  */
                printf("Exec failed\n");
                exit(1);
           }
@@ -82,18 +128,8 @@ void  execute(char **argv)
      }
 }
 
-void  main(void)
+void  sequential(char **args)
 {
-     char  line[MAX_LINE];             /* the input line                 */
-     char  *argv[MAX_LINE/2 + 1];              /* the command line argument      */
-
-     while (1) {                   /* repeat until done ....         */
-          printf("lcp2 -> ");     /*   display a prompt             */
-          gets(line);              /*   read in the command line     */
-          printf("\n");
-          parse(line, argv);       /*   parse the line               */
-          if (strcmp(argv[0], "exit") == 0)  /* is it an "exit"?     */
-               exit(0);            /*   exit if it is                */
-          execute(argv);           /* otherwise, execute the command */
-     }
+     pid_t pid;
+     int status
 }
