@@ -49,7 +49,28 @@
 // 		return 0;
 // }
 
-void  parse(char *line, char **argv)
+void  execute(char **argv);
+void  trata_linha0(char *line, char **argv);
+
+void  main(void)
+{
+     char  line[MAX_LINE];             /* Linha de entrada                 */
+     char  *argv[MAX_LINE/2 + 1];      /* argumentos      */
+
+     while (1) {                  /* repeat until done ....         */
+          printf("lcp2> ");     
+          gets(line);             
+          printf("\n");
+          trata_linha0(line, argv);      /*   trata_linha0 the line               */
+          if (strcmp(argv[0], "exit") == 0)  /* is it an "exit"?     */
+               exit(0);            /*   exit if it is                */
+          else if (strcmp(argv[0], "style") == 0 && strcmp(argv[1], "sequential") == 0)
+
+          execute(argv);           /* otherwise, execute the command */
+     }
+}
+
+void  trata_linha0(char *line, char **argv)
 {
      while (*line != '\0') {       /* Se diferente do fim da linha */ 
           while (*line == ' ' || *line == '\t' || *line == '\n')
@@ -67,11 +88,11 @@ void  execute(char **argv)
      pid_t	pid;
      int	status;
 
-     if ((pid = fork()) < 0) {     /* Fa     z um fork para criar um processo filho          */
+     if ((pid = fork()) < 0) {     /* Faz um fork para criar um processo filho          */
           printf("Fork failed\n");
           exit(1);
      }
-     else if (pid == 0) {          /* for the child process:         */
+     else if (pid == 0) {          /* Processo filho         */
           if (execvp(*argv, argv) < 0) {     /* execute the command  */
                printf("Exec failed\n");
                exit(1);
@@ -79,21 +100,5 @@ void  execute(char **argv)
      }
      else {                                  /* for the parent:      */
           while (wait(&status) != pid);       /* wait for completion  */
-     }
-}
-
-void  main(void)
-{
-     char  line[MAX_LINE];             /* the input line                 */
-     char  *argv[MAX_LINE/2 + 1];              /* the command line argument      */
-
-     while (1) {                   /* repeat until done ....         */
-          printf("lcp2 -> ");     /*   display a prompt             */
-          gets(line);              /*   read in the command line     */
-          printf("\n");
-          parse(line, argv);       /*   parse the line               */
-          if (strcmp(argv[0], "exit") == 0)  /* is it an "exit"?     */
-               exit(0);            /*   exit if it is                */
-          execute(argv);           /* otherwise, execute the command */
      }
 }
