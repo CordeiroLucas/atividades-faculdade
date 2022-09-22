@@ -51,15 +51,15 @@
 
 void  parse(char *line, char **argv)
 {
-     while (*line != '\0') {       /* if not the end of line ....... */ 
+     while (*line != '\0') {       /* Se diferente do fim da linha */ 
           while (*line == ' ' || *line == '\t' || *line == '\n')
-               *line++ = '\0';     /* replace white spaces with 0    */
-          *argv++ = line;          /* save the argument position     */
+               *line++ = '\0';     /*  Substitui espaços em branco por NULL */
+          *argv++ = line;          /* Guarda a posição do argumento     */
           while (*line != '\0' && *line != ' ' && 
                  *line != '\t' && *line != '\n') 
-               line++;             /* skip the argument until ...    */
+               line++;             /* Pula o argumento até caracter de espaço, ou fim da linha    */
      }
-     *argv = '\0';                 /* mark the end of argument list  */
+     *argv = '\0';                 /* Coloca o final do argumento  */
 }
 
 void  execute(char **argv)
@@ -67,13 +67,13 @@ void  execute(char **argv)
      pid_t	pid;
      int	status;
 
-     if ((pid = fork()) < 0) {     /* fork a child process           */
-          printf("*** ERROR: forking child process failed\n");
+     if ((pid = fork()) < 0) {     /* Fa     z um fork para criar um processo filho          */
+          printf("Fork failed\n");
           exit(1);
      }
      else if (pid == 0) {          /* for the child process:         */
           if (execvp(*argv, argv) < 0) {     /* execute the command  */
-               printf("*** ERROR: exec failed\n");
+               printf("Exec failed\n");
                exit(1);
           }
      }
