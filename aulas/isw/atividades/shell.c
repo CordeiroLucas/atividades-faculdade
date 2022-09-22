@@ -84,11 +84,11 @@ void  execute(char **argv)
 
 void  main(void)
 {
-     char  line[1024];             /* the input line                 */
-     char  *argv[64];              /* the command line argument      */
+     char  line[MAX_LINE];             /* the input line                 */
+     char  *argv[MAX_LINE/2 + 1];              /* the command line argument      */
 
      while (1) {                   /* repeat until done ....         */
-          printf("Shell -> ");     /*   display a prompt             */
+          printf("lcp2 -> ");     /*   display a prompt             */
           gets(line);              /*   read in the command line     */
           printf("\n");
           parse(line, argv);       /*   parse the line               */
