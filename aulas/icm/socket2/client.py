@@ -3,7 +3,7 @@ import threading
 
 PORT = 5050
 FORMATO = 'utf-8'
-SERVER = "192.168.15.103"
+SERVER = socket.gethostbyname(socket.gethostname())
 ADDR = (SERVER, PORT)
 
 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -21,6 +21,9 @@ def enviar(mensagem):
 def enviar_mensagem():
     mensagem = input()
     enviar("msg=" + mensagem)
+
+# formato da mensagem
+# 
 
 def enviar_nome():
     nome = input('Digite seu nome: ')

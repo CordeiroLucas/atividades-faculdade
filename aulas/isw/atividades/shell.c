@@ -52,31 +52,26 @@
 void  execute(char **args);
 void  trata_linha0(char *line, char **args);
 
-{
-	
-
-	printf("1\n");
-
-
-	printf("2\n");
-
-	printf("\n");
-
-	fclose(arq);
-
-	return 0;
-}
-
 void  main(int argc, char file[25])
 {
+     if (argc == 1) //Se igual a 1, significa que ele tem apenas o nome do programa a ser executado
+	{ 
+		printf("No arguments entered\n");
+		exit(0);
+     } else {
+          printf("Roda arquivo\n");
+          exit(0);
+     }
+
      char  line[MAX_LINE];             /* Linha de entrada                 */
      char  *args[MAX_LINE/2 + 1];      /* argumentos      */
-     int x;
 	FILE *arq;
 
      while(!feof(arq)){
-		fscanf(arq, "%d", &x);
+		fscanf(arq, "%d", line);
 	}
+
+     // strtok()
 
      arq = fopen(file, "r");
 
@@ -131,5 +126,5 @@ void  execute(char **args)
 void  sequential(char **args)
 {
      pid_t pid;
-     int status
+     int status;
 }
