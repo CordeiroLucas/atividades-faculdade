@@ -57,14 +57,30 @@ void  main(void)
      char  line[MAX_LINE];             /* Linha de entrada                 */
      char  *argv[MAX_LINE/2 + 1];      /* argumentos      */
 
+     // if (argc == 1) {
+     //      printf("não há argumentos na entrada");
+     // } else if (argc > 1) {
+     //      printf("há argumentos na entrada\n");
+     // }
+
      while (1) {                  /* repeat until done ....         */
           printf("lcp2> ");     
           gets(line);             
           printf("\n");
           trata_linha0(line, argv);      /*   trata_linha0 the line               */
-          if (strcmp(argv[0], "exit") == 0)  /* is it an "exit"?     */
-               exit(0);            /*   exit if it is                */
-          else if (strcmp(argv[0], "style") == 0 && strcmp(argv[1], "sequential") == 0)
+          if (strcmp(argv[0], "exit") == 0) /* Finaliza programa */
+               exit(0);            
+          else if (strcmp(argv[0], "style") == 0 && strcmp(argv[1], "sequential") == 0) {
+               while(1) {
+                    printf("lcp2 seq> ");
+                    exit(0);
+               }
+          } else if (strcmp(argv[0], "style") == 0 && strcmp(argv[1], "parallel") == 0) {
+               while (1) {
+                    printf("lcp2 par> ");
+                    exit(0);
+               }
+          }
 
           execute(argv);           /* otherwise, execute the command */
      }
