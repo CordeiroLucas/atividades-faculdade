@@ -1,9 +1,9 @@
 CC = gcc
 
-objects = shell.o
+objects = shell.c
 
 shell: $(objects)
-	$(CC) shell.c shell
+	$(CC) $(objects) -o shell
 
 .PHONY: clean
 clean:
