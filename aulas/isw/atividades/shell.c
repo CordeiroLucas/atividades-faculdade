@@ -50,12 +50,13 @@
 // }
 
 void  execute(char **argv);
-void  trata_linha0(char *line, char **argv);
+void  trata_linha(char *line, char **argv);
 
 void  main(void)
 {
      char  line[MAX_LINE];             /* Linha de entrada                 */
      char  *argv[MAX_LINE/2 + 1];      /* argumentos      */
+     char *token;
 
      // if (argc == 1) {
      //      printf("não há argumentos na entrada");
@@ -67,12 +68,13 @@ void  main(void)
           printf("lcp2> ");     
           gets(line);             
           printf("\n");
-          trata_linha0(line, argv);      /*   trata_linha0 the line               */
+          trata_linha(line, argv);      /*   trata_linha the line               */
           if (strcmp(argv[0], "exit") == 0) /* Finaliza programa */
                exit(0);            
           else if (strcmp(argv[0], "style") == 0 && strcmp(argv[1], "sequential") == 0) {
                while(1) {
                     printf("lcp2 seq> ");
+                    
                     exit(0);
                }
           } else if (strcmp(argv[0], "style") == 0 && strcmp(argv[1], "parallel") == 0) {
@@ -86,7 +88,7 @@ void  main(void)
      }
 }
 
-void  trata_linha0(char *line, char **argv)
+void  trata_linha(char *line, char **argv)
 {
      while (*line != '\0') {       /* Se diferente do fim da linha */ 
           while (*line == ' ' || *line == '\t' || *line == '\n')
@@ -102,7 +104,7 @@ void  trata_linha0(char *line, char **argv)
 void  execute(char **argv)
 {
      pid_t	pid;
-     int	status;
+     int	     status;
 
      if ((pid = fork()) < 0) {     /* Faz um fork para criar um processo filho          */
           printf("Fork failed\n");
