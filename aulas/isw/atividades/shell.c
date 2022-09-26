@@ -57,6 +57,7 @@ void  main(void)
      char  line[MAX_LINE];             /* Linha de entrada                 */
      char  *argv[MAX_LINE/2 + 1];      /* argumentos      */
      char *token;
+     char splitter[] = ";";
 
      // if (argc == 1) {
      //      printf("não há argumentos na entrada");

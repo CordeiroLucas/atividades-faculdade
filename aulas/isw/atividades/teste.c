@@ -5,8 +5,8 @@
 
 void  trata_linha(char *line, char **argv);
 
-int main () {
-   char str[80] = "bin/ls ; pwd";
+int main (void) {
+   char str[80] = "ls ; pwd";
    const char s[] = ";";
    char *token;
    char *args[41];
@@ -14,19 +14,33 @@ int main () {
    token = strtok(str, s);
 
    trata_linha(token, args);
+   
 
-   pid_t pid;
+   pid_t pid, pid2;
 
-   pid = fork();
+   while(token != NULL) {
+      printf("%s", token);
+      pid = fork();
+      token = strtok(NULL, s);
+   }
 
    if (pid < 0) {
       printf("Fork failed\n");
       exit(0);
    } else if (pid == 0) {
-      execvp(*args, args);
+      printf("Child one:\n");
+      execvp(args[0], args);
+      printf("alo");
       exit(0);
    } else {
+      printf("Parent One:\n");
       wait(NULL);
+      printf("cabo\n");
+      while (token != NULL) {
+         token = strtok(str, s);
+         pid2 = fork();
+      }
+      exit(0);
    }
 
    
