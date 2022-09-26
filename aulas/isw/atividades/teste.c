@@ -6,35 +6,51 @@
 void  trata_linha(char *line, char **argv);
 
 int main (void) {
-   char str[80] = " ls; pwd; ls -l";
-   const char s[] = "; ";
+   char str[80];
+   const char s[] = ";";
    char *token;
    char *args[41];
+   char *history[80];
+   history[0] = NULL;
 
+   pid_t pid;
 
-   pid_t pid, pid2;
-   token = strtok(str, s);
+   int i = 0, n;
+   while (1) {
+      int n = 0;
+      gets(str, 80);
+      if (strcmp(str, "history") == 0) {
+         if (history[0] != NULL) {
+            printf("1");
+            for(n=0;history[n]!=NULL;n++) {
+               printf("%s ", history[n]);
+            }
+         }else {
+            printf("No history!\n");
+         }
 
-   while (token != NULL) {
-      
-
-      trata_linha(token, args);
-
-      pid = fork();
-
-
-      if (pid < 0) {
-         printf("Fork failed\n");
-         exit(0);
-      } else if (pid == 0) {
-         execvp(*args, args);
-         exit(0);
+      } else if (str != ' ' && str != '\0' && str != '\n') {
+         token = strtok(str, s);
+         while (token != NULL) {
+            trata_linha(token, args);
+            pid = fork();
+            if (pid < 0) {
+               printf("Fork failed\n");
+               exit(0);
+            } else if (pid == 0) {   
+               history[i] = args;       
+               execvp(*args, args);
+               exit(0);
+            } else {
+               wait(NULL);
+               token = strtok(NULL, s);
+            }
+         }
       } else {
-         wait(NULL);
-         token = strtok(NULL, s);
-      }
-
-   }   
+         printf("Invalid Key\n");
+         exit(0);
+      }      
+   }
    
    // printf("%s\n", token);
 
@@ -45,7 +61,8 @@ void  trata_linha(char *line, char **argv)
 {
      while (*line != '\0') {       /* Se diferente do fim da linha */ 
           while (*line == ' ' || *line == '\t' || *line == '\n')
-               *line++ = '\0';     /*  Substitui espaços em branco por NULL */
+               *line = '\0';     /* Substitui espaços em branco por NULL */
+               
           *argv++ = line;          /* Guarda a posição do argumento     */
           while (*line != '\0' && *line != ' ' && 
                  *line != '\t' && *line != '\n') 
@@ -53,3 +70,4 @@ void  trata_linha(char *line, char **argv)
      }
      *argv = '\0';                 /* Coloca o final do argumento  */
 }
+

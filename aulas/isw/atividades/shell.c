@@ -121,3 +121,8 @@ void  execute(char **argv)
           while (wait(&status) != pid);       /* wait for completion  */
      }
 }
+
+void execute_seq(char *line)
+{
+     /
+}
