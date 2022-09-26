@@ -13,18 +13,20 @@ server.bind(ADDR)
 conexoes = []
 mensagens = []
 
-def enviar_mensagem_individual(conexao):
+def enviar_mensagem_individual(conexao, addr):
     print(f"[ENVIANDO] Enviando mensagens para {conexao['addr']}")
     for i in range(conexao['last'], len(mensagens)):
+        # if conexao['addr'] != addr:
         mensagem_de_envio = "msg=" + mensagens[i]
         conexao['conn'].send(mensagem_de_envio.encode())
         conexao['last'] = i + 1
         time.sleep(0.2)
 
-def enviar_mensagem_todos():
+def enviar_mensagem_todos(addr):
     global conexoes
     for conexao in conexoes:
-        enviar_mensagem_individual(conexao)
+        # if conexao['addr'] != addr:
+        enviar_mensagem_individual(conexao, addr)
 
 """
 1 vez que o cliente entrar, vai mandar o nome:
@@ -57,7 +59,7 @@ def handle_clientes(conn, addr):
                 mensagem_separada = msg.split("=")
                 mensagem = nome + "=" + mensagem_separada[1]
                 mensagens.append(mensagem)
-                enviar_mensagem_todos()
+                enviar_mensagem_todos(addr)
 
 
 
