@@ -1,6 +1,7 @@
 #include <pthread.h>
 #include <semaphore.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 sem_t empty; //Semáforo 
 sem_t full; //Semáforo
@@ -22,8 +23,8 @@ int main()
 	printf("Insira P, C, B, N respectinvamente:\n");
 	scanf("%d %d %d %d, &P, &C, &B, &N");
 
-	pthread_t * pro = (pthread*)malloc(sizeof(pthread_t)*P); // é o array que vai conter os nomes do produtores 
-	pthread_t * con =(pthread*)malloc(sizeof(pthread_t)*C); 
+	pthread_t * pro = (pthread_t*)malloc(sizeof(pthread_t)*P); // é o array que vai conter os nomes do produtores 
+	pthread_t * con =(pthread_t*)malloc(sizeof(pthread_t)*C); 
 	buffer = (int*)malloc(sizeof(int)*B);
 
 	pthread_mutex_init(&mutex,NULL);
@@ -34,11 +35,11 @@ int main()
 	int *index = (int *)malloc(sizeof(int)*size);
 
 	for(int i = 0;i < P; i++) {
-		pthread_create(&pro[i], NULL, produce, index[i]);
+		pthread_create(&pro[i], NULL, producer, index[i]);
 	}
 
 	for(int i = 0; i < C; i ++) {
-		pthread_create(&con[i], NULL, consumer, &index[i])
+		pthread_create(&con[i], NULL, consumer, &index[i]);
 	}
 
 	for(int i = 0; i < P; i++) {
@@ -71,7 +72,22 @@ void *producer(void *pno)
 				*id, input, in);
 			in = (in+1)%B;
 			pthread_mutex_unlock(&mutex);
-			sem_post
+			sem_post(&empty);
 		}
+	}
+}
+
+void *consumer(void *cno)
+{
+	int *id = cno;
+	int output;
+	while(1){
+		sem_wait(&empty);
+		pthread_mutex_lock(&mutex);
+		output = buffer[out];
+		printf("Consumer %d Output %d Index %d", *id, output, out);
+		out = (out+1)%B;
+		pthread_mutex_unlock(&mutex);
+		sem_post(&full);
 	}
 }
