@@ -6,123 +6,130 @@
 
 #define MAX_LINE 80 /* 80 chars per line, per command */
 
-// int main(void)
-// {
-// 	char* args[MAX_LINE/2 + 1];	/* command line has max of 40 arguments */
-// 	int should_run = 1;		/* flag to help exit program*/
-// 	pid_t pid;
-		
-// 	char* argument[] = {"ls", NULL};
+void trata_linha(char *line, char **args);
+void execute_seq(char *token, char **args);
+void execute_par(char *token, char **args);
 
-// 	while (should_run) {
-
-// 		printf("lcp2 seq> ");
-// 		fflush(stdout);
-
-// 		/*
-// 		After read the input, the next steps are:
-// 		- create n child process with fork() command
-// 		- the child process will invoke execvp()
-// 		- parent will invoke wait() unless command line include &	 
-// 		*/
-
-// 		fgets(args, MAX_LINE/2 + 1, stdin);
-
-// 		if (strcmp(args, "exit\n") == 0) exit(0);
-		
-// 		// pid = fork();
-
-// 		// if (pid < 0) {
-// 		// 	fprintf(stderr, "Fork failed\n");
-// 		// 	return 1;
-// 		// } 
-// 		// else if (pid == 0) {
-// 		// 	execvp("ls", PATH)
-// 		// } else {
-// 		// 	wait(NULL);
-// 		// }
-
-
-		
-// 		printf("%s", args);
-// 	}
-// 		return 0;
-// }
-
-void  execute(char **argv);
-void  trata_linha(char *line, char **argv);
-
-void  main(void)
+int main(void)
 {
-     char  line[MAX_LINE];             /* Linha de entrada                 */
-     char  *argv[MAX_LINE/2 + 1];      /* argumentos      */
+     char line[MAX_LINE];
      char *token;
-     char splitter[] = ";";
+     char *args[MAX_LINE / 2 - 1];
+     int should_run = 1, style_par = 0;
 
-     // if (argc == 1) {
-     //      printf("não há argumentos na entrada");
-     // } else if (argc > 1) {
-     //      printf("há argumentos na entrada\n");
-     // }
+     int n;
+     while (should_run)
+     {
+          int n = 0;
 
-     while (1) {                  /* repeat until done ....         */
-          printf("lcp2> ");     
-          gets(line);             
-          printf("\n");
-          trata_linha(line, argv);      /*   trata_linha the line               */
-          if (strcmp(argv[0], "exit") == 0) /* Finaliza programa */
-               exit(0);            
-          else if (strcmp(argv[0], "style") == 0 && strcmp(argv[1], "sequential") == 0) {
-               while(1) {
-                    printf("lcp2 seq> ");
-                    
-                    exit(0);
+          printf("lcp2 seq> ");
+          gets(line, MAX_LINE);
+
+          token = strtok(line, ";");
+          trata_linha(line, args);
+
+          if (strcmp(args[0], "style") == 0 && strcmp(args[1], "parallel") == 0) // Se usuário digita style parallel
+               style_par = 1;
+
+          while (style_par)
+          {
+               printf("lcp2 par> ");
+               gets(line, 80);
+
+               token = strtok(line, ";");
+               trata_linha(line, args);
+
+               if (strcmp(args[0], "style") == 0 && strcmp(args[1], "sequential") == 0)
+               {
+                    style_par = 0;
+                    break;
                }
-          } else if (strcmp(argv[0], "style") == 0 && strcmp(argv[1], "parallel") == 0) {
-               while (1) {
-                    printf("lcp2 par> ");
+               else if (strcmp(args[0], "exit") == 0)
+               {
                     exit(0);
-               }
+               } else execute_par(token, args);
           }
 
-          execute(argv);           /* otherwise, execute the command */
+          if (strcmp(args[0], "exit") == 0) // Se usuário digita exit
+               exit(0);
+
+          execute_seq(token, args);
+          // printf("%s\n", token);
      }
+     return 0;
 }
 
-void  trata_linha(char *line, char **argv)
+void trata_linha(char *line, char **args)
 {
-     while (*line != '\0') {       /* Se diferente do fim da linha */ 
+     while (*line != '\0')
+     { /* Se diferente do fim da linha */
           while (*line == ' ' || *line == '\t' || *line == '\n')
-               *line++ = '\0';     /*  Substitui espaços em branco por NULL */
-          *argv++ = line;          /* Guarda a posição do argumento     */
-          while (*line != '\0' && *line != ' ' && 
-                 *line != '\t' && *line != '\n') 
-               line++;             /* Pula o argumento até caracter de espaço, ou fim da linha    */
+               *line++ = '\0'; /* Substitui espaços em branco por NULL */
+
+          *args++ = line; /* Guarda a posição do argumento     */
+
+          while (*line != '\0' && *line != ' ' &&
+                 *line != '\t' && *line != '\n')
+               line++; /* Pula o argumento até caracter de espaço, ou fim da linha    */
      }
-     *argv = '\0';                 /* Coloca o final do argumento  */
+
+     *args = '\0'; /* Coloca o final do argumento  */
 }
 
-void  execute(char **argv)
+void execute_seq(char *token, char **args)
 {
-     pid_t	pid;
-     int	     status;
+     pid_t pid;
+     while (token != NULL)
+     {
+          trata_linha(token, args);
 
-     if ((pid = fork()) < 0) {     /* Faz um fork para criar um processo filho          */
-          printf("Fork failed\n");
-          exit(1);
-     }
-     else if (pid == 0) {          /* Processo filho         */
-          if (execvp(*argv, argv) < 0) {     /* execute the command  */
-               printf("Exec failed\n");
-               exit(1);
+          pid = fork();
+          if (pid < 0)
+          {
+               printf("Fork failed\n");
+               exit(0);
+          }
+          else if (pid == 0)
+          {
+               execvp(*args, args);
+               exit(0);
+          }
+          else
+          {
+               wait(NULL);
+               token = strtok(NULL, ";");
           }
      }
-     else {                                  /* for the parent:      */
-          while (wait(&status) != pid);       /* wait for completion  */
-     }
 }
 
-void execute_seq(char *line)
+void execute_par(char *token, char **args)
 {
-     /
+     pid_t pid;
+     int filhos = 0;
+     while (token != NULL)
+     {
+          trata_linha(token, args);
+
+          pid = fork();
+          filhos++;
+          if (pid < 0)
+          {
+               printf("Fork failed\n");
+               exit(0);
+          }
+          else if (pid == 0)
+          {
+               execvp(*args, args);
+               exit(0);
+          }
+          else
+          {
+               token = strtok(NULL, ";");
+          }
+     }
+
+     for (int i = 0; i < filhos; i++)
+     {
+          wait(NULL);
+     }
 }
