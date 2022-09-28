@@ -63,8 +63,6 @@ int main(int argc, char *argv[])
                     if (strcmp(args[0], "exit") == 0) {
                          exit(0);
                     } 
-
-                    printf("args=%s\n", args[0]);
                     
                     if (strcmp(args[0], "!!") == 0) {
                          strcpy(history, temp);
