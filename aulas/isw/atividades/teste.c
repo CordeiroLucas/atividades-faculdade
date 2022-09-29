@@ -3,128 +3,33 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-void trata_linha(char *line, char **argv);
-void execute_seq(char *token, char **args);
-void execute_par(char *token, char **args);
+void trata_linha(char *line);
 
 int main(void)
 {
-	char str[80];
-	char *token;
+	char str[80] = "   bondia ; manooo; do ceu";
 	char *args[41];
-	int should_run = 1, style_par = 0;
 
-	int n;
-	while (should_run)
-	{
-		int n = 0;
+	trata_linha(str);
 
-		printf("lcp2 seq> ");
-		gets(str, 80);
+	printf("%s", str);
 
-		token = strtok(str, ";");
-		trata_linha(str, args);
 
-		if (strcmp(args[0], "style") == 0 && strcmp(args[1], "parallel") == 0)
-			style_par = 1;
-
-		else if (strcmp(args[0], "exit") == 0)
-			exit(0);
-
-		while (style_par)
-		{
-			printf("lcp2 par> ");
-			gets(str, 80);
-
-			token = strtok(str, ";");
-			trata_linha(str, args);
-
-			if (strcmp(args[0], "style") == 0 && strcmp(args[1], "sequential") == 0)
-			{
-				style_par = 0;
-				break;
-			}
-
-			execute_par(token, args);
-		}
-
-		execute_seq(token, args);
-		// printf("%s\n", token);
-	}
+	
 	return 0;
 }
 
-void trata_linha(char *line, char **argv)
+void trata_linha(char *line)
 {
-	while (*line != '\0')
-	{ /* Se diferente do fim da linha */
-		while (*line == ' ' || *line == '\t' || *line == '\n')
-			*line++ = '\0'; /* Substitui espaços em branco por NULL */
+     int i = 0, j = 0;
+     char args_temp[strlen(line)];
 
-		*argv++ = line; /* Guarda a posição do argumento     */
-
-		while (*line != '\0' && *line != ' ' &&
-		       *line != '\t' && *line != '\n')
-			line++; /* Pula o argumento até caracter de espaço, ou fim da linha    */
-	}
-
-	*argv = '\0'; /* Coloca o final do argumento  */
-}
-
-void execute_seq(char *token, char **args)
-{
-	pid_t pid;
-	while (token != NULL)
-	{
-		trata_linha(token, args);
-
-		pid = fork();
-		if (pid < 0)
-		{
-			printf("Fork failed\n");
-			exit(0);
-		}
-		else if (pid == 0)
-		{
-			execvp(*args, args);
-			exit(0);
-		}
-		else
-		{
-			wait(NULL);
-			token = strtok(NULL, ";");
-		}
-	}
-}
-
-void execute_par(char *token, char **args)
-{
-	pid_t pid;
-	int filhos = 0;
-	while (token != NULL)
-	{
-		trata_linha(token, args);
-
-		pid = fork();
-		filhos++;
-		if (pid < 0)
-		{
-			printf("Fork failed\n");
-			exit(0);
-		}
-		else if (pid == 0)
-		{
-			execvp(*args, args);
-			exit(0);
-		}
-		else
-		{
-			token = strtok(NULL, ";");
-		}
-	}
-
-	for (int i = 0; i < filhos; i++)
-	{
-		wait(NULL);
-	}
+     for (i = 0; i < strlen(line); i++) {
+          if (line[i] != ' ' && line[i] != '\n' && line[i] != '\t') {
+               args_temp[i] = line[i];
+	       j++;
+          }
+     }
+     strcpy(line, args_temp);
+     
 }
