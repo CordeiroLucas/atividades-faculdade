@@ -3,6 +3,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <sys/types.h>
+#include <sys/wait.h>
 
 #define MAX_LINE 80 /* 80 chars per line, per command */
 
@@ -23,7 +24,7 @@ int main(int argc, char *argv[])
           while (should_run)
           {
                printf("lcp2 seq> ");
-               gets(line, MAX_LINE);
+               fgets(line, MAX_LINE, stdin);
                strcpy(temp, line);
 
                // printf("line=%s", line);
@@ -49,7 +50,7 @@ int main(int argc, char *argv[])
 
                while (style_par) {
                     printf("lcp2 par> ");
-                    gets(line, MAX_LINE);
+                    fgets(line, MAX_LINE, stdin);
                     strcpy(temp, line);
 
                     token = strtok(line, ";");
