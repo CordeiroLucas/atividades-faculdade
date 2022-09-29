@@ -23,62 +23,53 @@ int main(int argc, char *argv[])
 
           while (should_run)
           {
+               printf("\n");
                printf("lcp2 seq> ");
-               fgets(line, MAX_LINE, stdin);
-               strcpy(temp, line);
-
-               // printf("line=%s", line);
-
-               // for (int i = 0; i < strlen(line); i++) {
-               //      if (i == 0 && line[i] == ' ') {
-               //           line[i] = 0;
-               //           continue;
-               //      } 
-
-               //      if (i != 0 && line[i-1] == ' ' && line[i] == ' ') {
-               //           line[i] =  0;
-               //      }
-               // }
-
-
-               token = strtok(line, ";");
-               trata_linha(line, args);
                
+               fgets(line, MAX_LINE, stdin); // Entrada de usuário de no máx 80 carácteres
+               strcpy(temp, line); // Copia a entrada em uma variável temporária
+               printf("\n");
+               
+          
+               token = strtok(line, ";"); // Divide a linha em tokens separados por ";"
+               trata_linha(line, args); // Trata a linha
+
 
                if (strcmp(args[0], "style") == 0 && strcmp(args[1], "parallel") == 0) // Se usuário digita style parallel
                     style_par = 1;
 
-               while (style_par) {
+               while (style_par) { // Entra função loop paralelo
+                    printf("\n");  
                     printf("lcp2 par> ");
-                    fgets(line, MAX_LINE, stdin);
-                    strcpy(temp, line);
+                    fgets(line, MAX_LINE, stdin); 
+                    strcpy(temp, line); // Copia entrada do usuário para variável temporária
+                    printf("\n");
 
-                    token = strtok(line, ";");
-                    trata_linha(line, args);
+                    token = strtok(line, ";"); // Pega apenas a string do comando sem o ";"
+                    trata_linha(line, args);  // Adiciona alguns \0 para separar os comandos
 
-                    if (strcmp(args[0], "style") == 0 && strcmp(args[1], "sequential") == 0) {
-                         style_par = 0;
+                    if (strcmp(args[0], "style") == 0 && strcmp(args[1], "sequential") == 0) { // Se foi digitado style parallel ele muda a style_par 
+                         style_par = 0;                                                        // para 0 e volta para o loop principal
                          break;
                     } 
                     
-                    if (strcmp(args[0], "exit") == 0) {
+                    if (strcmp(args[0], "exit") == 0) { // Se digitado o Exit, finaliza o programa
                          exit(0);
                     } 
                     
-                    if (strcmp(args[0], "!!") == 0) {
-                         strcpy(history, temp);
+                    if (strcmp(args[0], "!!") == 0) { // Condição para entrar na função de history
                          token = strtok(history, ";");
                          
                          trata_linha(history, args);
-                         execute_par(token, args);
+                         execute_par(token, args); // Executa a função executar em paralelo
                     } else 
-                         strcpy(history, temp); execute_par(token, args);
-               }
+                         strcpy(history, temp); execute_par(token, args); // Se não entrou nas outras funções, então o comando inserido é para executar o shell,
+               }                                                          //    então o programa salva a variável temporária em histórico para ser utilizada posteriormente
 
-               if (strcmp(args[0], "exit") == 0) // Se usuário digita exit
+               if (strcmp(args[0], "exit") == 0) // Se digitado o Exit, finaliza o programa
                     exit(0);
 
-               else if (strcmp(args[0], "!!") == 0) {
+               else if (strcmp(args[0], "!!") == 0) {  //history
                     token = strtok(history, ";");
 
                     trata_linha(history, args);
@@ -86,17 +77,18 @@ int main(int argc, char *argv[])
                }
 
 
-               strcpy(history, temp);
+               strcpy(history, temp); // Se não entrou nas outras funções, então o comando inserido é para executar o shell,
+                                      //    então o programa salva a variável temporária em histórico para ser utilizada posteriormente
                execute_seq(token, args);
                // printf("%s\n", token);
           }
           return 0;
      } else {
-          printf("OPA PARECE QUE TEMOS UMA ENTRADA BASH AQUI N É MEIIXMO!?!?!\n");
+          printf("Bash\n");
      }
 }
 
-void trata_linha(char *line, char **args)
+void trata_linha(char *line, char **args) //divide a linha em argumentos
 {
      while (*line != '\0')
      { /* Se diferente do fim da linha */
@@ -116,25 +108,25 @@ void trata_linha(char *line, char **args)
 void execute_seq(char *token, char **args)
 {
      pid_t pid;
-     while (token != NULL)
+     while (token != NULL) // Em quanto o token for diferente de Nulo
      {
-          trata_linha(token, args);
+          trata_linha(token, args); // Formata a linha em argumentos
 
-          pid = fork();
-          if (pid < 0)
+          pid = fork(); //faz o fork para executar a função
+          if (pid < 0) //se menor que 0 é porque houve erro na criação de filho
           {
                printf("Fork failed\n");
                exit(0);
           }
-          else if (pid == 0)
+          else if (pid == 0) // se igual a zero é porque é igual ao filho
           {
-               execvp(*args, args);
+               execvp(*args, args); //executa comando
                exit(0);
           }
-          else
+          else // Caso contrário o pai vai esperar o filho criado terminar logo em seguida
           {
-               wait(NULL);
-               token = strtok(NULL, ";");
+               wait(NULL); // Pai vai esperar o filho terminar a execução para seguir o loop
+               token = strtok(NULL, ";"); // Segue para o próximo token
           }
      }
 }
@@ -142,13 +134,13 @@ void execute_seq(char *token, char **args)
 void execute_par(char *token, char **args)
 {
      pid_t pid;
-     int filhos = 0;
+     int filhos = 0; //contador de filhos gerados
      while (token != NULL)
      {
           trata_linha(token, args);
 
           pid = fork();
-          filhos++;
+          filhos++; //incrementa o contador ao criar filhos
           if (pid < 0)
           {
                printf("Fork failed\n");
@@ -161,12 +153,14 @@ void execute_par(char *token, char **args)
           }
           else
           {
-               token = strtok(NULL, ";");
+               token = strtok(NULL, ";"); // Segue para o próximo token
           }
      }
+     // Filhos são criados e executam os comandos no primeiro loop
 
      for (int i = 0; i < filhos; i++)
      {
-          wait(NULL);
+          wait(NULL); // Só após o último filho ser criado, que os pais vão começar a
+                         // esperarem pelos processos filhos finalizarem
      }
 }
