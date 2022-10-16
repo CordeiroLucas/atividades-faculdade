@@ -12,42 +12,40 @@ void execute_par(char *token, char **args);
 
 int main(int argc, char *argv[])
 {
-
      if (argc == 1) {    
           char line[MAX_LINE]; // Linha 
-          char *token; // Token de cada comando, dividido por ;
-          char *args[MAX_LINE / 2 - 1]; //Max de argumentos na linha
+          char *token, *next; // Token de cada comando, dividido por ;
+          char *args[MAX_LINE / 2 + 1]; //Max de argumentos na linha
           int should_run = 1, style_par = 0; // Variáveis para controlar o fluxo do shell
           char history[MAX_LINE], temp[MAX_LINE];
+          
 
           while (should_run)
           {
                printf("lcp2 seq> ");
-               gets(line, MAX_LINE);
-               strcpy(temp, line);
-
-               // printf("line=%s", line);
-
-               // for (int i = 0; i < strlen(line); i++) {
-               //      if (i == 0 && line[i] == ' ') {
-               //           line[i] = 0;
-               //           continue;
-               //      } 
-
-               //      if (i != 0 && line[i-1] == ' ' && line[i] == ' ') {
-               //           line[i] =  0;
-               //      }
-               // }
-
+               gets(line, MAX_LINE); //Recebe Linha com no máximo 80 caracteres
+               strcpy(temp, line); // Copia a linha para uma variável temporária
 
                token = strtok(line, ";");
-               trata_linha(line, args);
+               trata_linha(line, args); // Função trata linha que tira os espaços em branco 
                
+               if (strcmp(args[0], "!!") == 0) {
+                    token = strtok(history, ";");
+                    
+                    trata_linha(history, args);
+
+                    if (strcmp(args[0], "style") != 0) {
+                         execute_par(token, args);
+                         continue;     
+                    } else {
+                         printf("style %s\n", args[1]);
+                    }
+               } 
 
                if (strcmp(args[0], "style") == 0 && strcmp(args[1], "parallel") == 0) // Se usuário digita style parallel
-                    style_par = 1;
+                    style_par = 1; strcpy(history, temp);
 
-               while (style_par) {
+               while (style_par) { 
                     printf("lcp2 par> ");
                     gets(line, MAX_LINE);
                     strcpy(temp, line);
@@ -55,40 +53,38 @@ int main(int argc, char *argv[])
                     token = strtok(line, ";");
                     trata_linha(line, args);
 
-                    if (strcmp(args[0], "style") == 0 && strcmp(args[1], "sequential") == 0) {
-                         style_par = 0;
-                         break;
-                    } 
-                    
+                    if (strcmp(args[0], "!!") == 0) {
+                         token = strtok(history, ";");
+                         
+                         trata_linha(history, args);
+
+                         if (strcmp(args[0], "style") != 0) {
+                              execute_par(token, args);
+                         } else {
+                              printf("style %s\n", args[1]);
+                         }
+                    }
+
                     if (strcmp(args[0], "exit") == 0) {
                          exit(0);
                     } 
                     
-                    if (strcmp(args[0], "!!") == 0) {
+                    if (strcmp(args[0], "style") == 0 && strcmp(args[1], "sequential") == 0) {
+                         style_par = 0;
                          strcpy(history, temp);
-                         token = strtok(history, ";");
-                         
-                         trata_linha(history, args);
-                         execute_par(token, args);
+                         break;
                     } else 
-                         strcpy(history, temp); execute_par(token, args);
+                         strcpy(history, temp); execute_par(token, args);        
                }
 
                if (strcmp(args[0], "exit") == 0) // Se usuário digita exit
                     exit(0);
 
-               else if (strcmp(args[0], "!!") == 0) {
-                    token = strtok(history, ";");
-
-                    trata_linha(history, args);
-                    execute_seq(token, args);
-               }
-
-
                strcpy(history, temp);
                execute_seq(token, args);
                // printf("%s\n", token);
           }
+          
           return 0;
      } else {
           printf("OPA PARECE QUE TEMOS UMA ENTRADA BASH AQUI N É MEIIXMO!?!?!\n");
@@ -97,10 +93,11 @@ int main(int argc, char *argv[])
 
 void trata_linha(char *line, char **args)
 {
+     int i = 0;
      while (*line != '\0')
      { /* Se diferente do fim da linha */
           while (*line == ' ' || *line == '\t' || *line == '\n')
-               *line++ = '\0'; /* Substitui espaços em branco por NULL */
+               *line++ = 0; /* Substitui espaços em branco por NULL */
 
           *args++ = line; /* Guarda a posição do argumento     */
 
@@ -110,6 +107,7 @@ void trata_linha(char *line, char **args)
      }
 
      *args = '\0'; /* Coloca o final do argumento  */
+
 }
 
 void execute_seq(char *token, char **args)
